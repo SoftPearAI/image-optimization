@@ -23,9 +23,10 @@ AWS CDK is an open-source software development framework used to define cloud in
 git clone https://github.com/aws-samples/image-optimization.git 
 cd image-optimization
 npm install
+npm install --os=linux --cpu=x64 sharp   
 cdk bootstrap
 npm run build
-cdk deploy
+cdk deploy -c DEPLOY_SAMPLE_WEBSITE=false
 ```
 
 Note that the solution deploys the latest version of the Sharp library. If a new version has been released, and you'd like to updgrade to the new version (for ex to patch a [cve](https://github.com/lovell/sharp/issues/3798)), rebuild and redeploy using CDK.

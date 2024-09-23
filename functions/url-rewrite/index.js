@@ -6,6 +6,8 @@ function handler(event) {
     var originalImagePath = request.uri;
     //  validate, process and normalize the requested operations in query parameters
     var normalizedOperations = {};
+    const ALLOWED_WIDTHS = [70, 120, 250, 500, 1000];
+
     if (request.querystring) {
         Object.keys(request.querystring).forEach(operation => {
             switch (operation.toLowerCase()) {
@@ -30,8 +32,11 @@ function handler(event) {
                     if (request.querystring[operation]['value']) {
                         var width = parseInt(request.querystring[operation]['value']);
                         if (!isNaN(width) && (width > 0)) {
-                            // you can protect the Lambda function by setting a max value, e.g. if (width > 4000) width = 4000;
-                            normalizedOperations['width'] = width.toString();
+                            // Round to the nearest allowed width
+                            var closestWidth = ALLOWED_WIDTHS.reduce((prev, curr) => {
+                                return (Math.abs(curr - width) < Math.abs(prev - width) ? curr : prev);
+                            });
+                            normalizedOperations['width'] = closestWidth.toString();
                         }
                     }
                     break;
